@@ -1,0 +1,45 @@
+# https://github.com/vegasbrianc/docker-compose-demo
+version: '2'
+services:
+   lb:
+     image: haproxy
+     ports:
+       - 80:8888
+     volumes:
+       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+     networks:
+       - cdbnet
+
+   node1:
+     image: klaemo/couchdb
+     ports:
+       - "15984:5984"
+       - "15986:5986"
+     volumes:
+       - ./data/node1:/opt/couchdb/data
+     networks:
+       - cdbnet
+
+   node2:
+     image: klaemo/couchdb
+     ports:
+       - "25984:5984"
+       - "25986:5986"
+     volumes:
+      - ./data/node2:/opt/couchdb/data
+     networks:
+      - cdbnet
+
+   node3:
+     image: klaemo/couchdb
+     ports:
+       - "35984:5984"
+       - "35986:5986"
+     volumes:
+      - ./data/node3:/opt/couchdb/data
+     networks:
+      - cdbnet
+
+networks:
+  cdbnet:
+    driver: bridge
