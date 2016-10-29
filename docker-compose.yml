@@ -1,4 +1,5 @@
 # https://github.com/vegasbrianc/docker-compose-demo
+# https://docs.docker.com/compose/compose-file/
 version: '2'
 services:
    lb:
@@ -18,7 +19,8 @@ services:
      volumes:
        - ./data/node1:/opt/couchdb/data
      networks:
-       - cdbnet
+       cdbnet:
+         ipv4_address: 172.28.0.11
 
    node2:
      image: klaemo/couchdb
@@ -28,7 +30,8 @@ services:
      volumes:
       - ./data/node2:/opt/couchdb/data
      networks:
-      - cdbnet
+       cdbnet:
+         ipv4_address: 172.28.0.12
 
    node3:
      image: klaemo/couchdb
@@ -38,8 +41,15 @@ services:
      volumes:
       - ./data/node3:/opt/couchdb/data
      networks:
-      - cdbnet
+       cdbnet:
+         ipv4_address: 172.28.0.13
+
 
 networks:
   cdbnet:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+          gateway: 172.28.0.1
